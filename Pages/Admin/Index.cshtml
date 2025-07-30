@@ -33,7 +33,7 @@
                     @if (!haber.IsPublish)
                     {
                         <form method="post" asp-page-handler="Publish" asp-route-id="@haber.Id" style="display:inline;">
-                            <button type="submit" class="btn btn-primary btn-sm">Yayınla</button>
+                            <button type="submit" class="btn btn-danger btn-sm">Yayınla</button>
                         </form>
                     }
                 </td>
