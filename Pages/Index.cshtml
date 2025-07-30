@@ -1,0 +1,89 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    @if (Model.Haberler != null && Model.Haberler.Any())
+    {
+        <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+            @foreach (var haber in Model.Haberler)
+            {
+                <img class="mySlides" src="@haber.ImagePath" style="width:600px; height:350px; display:none; object-fit:cover; border-radius:10px; cursor:pointer;"
+                     onclick="showDetails(@haber.Id)" />
+            }
+
+            <div style="margin-top: 10px;">
+                <button class="btn btn-primary" onclick="plusDivs(-1)">&#10094;</button>
+                <button class="btn btn-primary" onclick="plusDivs(1)">&#10095;</button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <p>Henüz yayınlanmış bir görsel yok.</p>
+    }
+
+    <!-- Modal -->
+    <div id="haberModal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%;
+        overflow:auto; background-color:rgba(0,0,0,0.8);">
+        <div style="background:#fff; margin:10% auto; padding:20px; width:80%; max-width:600px; border-radius:8px; position:relative;">
+            <span style="position:absolute; top:10px; right:20px; font-size:28px; cursor:pointer;" onclick="closeModal()">&times;</span>
+            <h3 id="modalTitle"></h3>
+            <p id="modalDate" style="font-style:italic;"></p>
+            <img id="modalImage" style="width:100%; height:auto; border-radius:5px; margin-bottom:15px;" />
+            <p id="modalSummary"></p>
+        </div>
+    </div>
+
+    @section Scripts {
+        <script>
+            let slideIndex = 1;
+            showDivs(slideIndex);
+
+            function plusDivs(n) {
+                showDivs(slideIndex += n);
+            }
+
+            function showDivs(n) {
+                let i;
+                let x = document.getElementsByClassName("mySlides");
+                if (n > x.length) { slideIndex = 1 }
+                if (n < 1) { slideIndex = x.length }
+                for (i = 0; i < x.length; i++) {
+                    x[i].style.display = "none";
+                }
+                x[slideIndex - 1].style.display = "block";
+            }
+
+            var haberler = [
+                @foreach (var h in Model.Haberler)
+                {
+                        @: {
+                        @:   id: @h.Id,
+                        @:   title: "@h.Title",
+                        @:   summary: "@h.Summary",
+                        @:   imagePath: "@h.ImagePath",
+                        @:   publishedDate: "@h.PublishedDate.ToString("dd MMM yyyy")"
+                        @: },
+                }
+            ];
+
+            function showDetails(id) {
+                var haber = haberler.find(h => h.id === id);
+                if (haber) {
+                    document.getElementById("modalTitle").innerText = haber.title;
+                    document.getElementById("modalDate").innerText = haber.publishedDate;
+                    document.getElementById("modalImage").src = haber.imagePath;
+                    document.getElementById("modalSummary").innerText = haber.summary;
+                    document.getElementById("haberModal").style.display = "block";
+                }
+            }
+
+            function closeModal() {
+                document.getElementById("haberModal").style.display = "none";
+            }
+        </script>
+    }
+</div>

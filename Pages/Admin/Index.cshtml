@@ -1,0 +1,43 @@
+﻿@page
+@model NewsPage.Pages.Admin.IndexModel
+@{
+    ViewData["Title"] = "Haberler";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Başlık</th>
+            <th>Özet</th>
+            <th>Yayın Durumu</th>
+            <th>İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var haber in Model.Haberler)
+        {
+            <tr>
+                <td>@haber.Title</td>
+                <td>@haber.Summary</td>
+                <td>
+                    @if (haber.IsPublish)
+                    {
+                        <span class="badge bg-success">Yayınlandı</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Yayınlanmadı</span>
+                    }
+                </td>
+                <td>
+                    @if (!haber.IsPublish)
+                    {
+                        <form method="post" asp-page-handler="Publish" asp-route-id="@haber.Id" style="display:inline;">
+                            <button type="submit" class="btn btn-primary btn-sm">Yayınla</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

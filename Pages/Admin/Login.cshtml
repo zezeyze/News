@@ -1,0 +1,20 @@
+﻿@page
+@model NewsPage.Pages.Admin.LoginModel
+@{
+    ViewData["Title"] = "Admin Giriş";
+}
+
+<h2>Admin Giriş</h2>
+
+<form method="post">
+    <label>Email:</label>
+    <input asp-for="Input.Email" /><br />
+    <label>Şifre:</label>
+    <input asp-for="Input.Password" type="password" /><br />
+    <button type="submit">Giriş</button>
+</form>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <p style="color:red">@Model.ErrorMessage</p>
+}
