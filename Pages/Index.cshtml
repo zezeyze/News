@@ -1,89 +1,103 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Ana Sayfa";
 }
 
-<div class="text-center">
-    @if (Model.Haberler != null && Model.Haberler.Any())
-    {
-        <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-            @foreach (var haber in Model.Haberler)
-            {
-                <img class="mySlides" src="@haber.ImagePath" style="width:600px; height:350px; display:none; object-fit:cover; border-radius:10px; cursor:pointer;"
-                     onclick="showDetails(@haber.Id)" />
-            }
+<!-- Bootstrap Carousel -->
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        @for (int i = 0; i < Model.Haberler.Count; i++)
+        {
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="@i"
+                    class="@(i == 0 ? "active" : "")" aria-current="@(i == 0 ? "true" : "false")"
+                    aria-label="Slide @(i + 1)"></button>
+        }
+    </div>
+    <div class="carousel-inner">
+        @for (int i = 0; i < Model.Haberler.Count; i++)
+        {
+            var haber = Model.Haberler[i];
+            <div class="carousel-item @(i == 0 ? "active" : "")">
+                <img src="@haber.ImagePath" class="d-block w-100" style="height: 50vh; width: 10vw; object-fit: cover; cursor: pointer;"
+                     alt="@haber.Title" onclick="showDetails(@haber.Id)" />
+            </div>
+        }
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Önceki</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Sonraki</span>
+    </button>
+</div>
 
-            <div style="margin-top: 10px;">
-                <button class="btn btn-primary" onclick="plusDivs(-1)">&#10094;</button>
-                <button class="btn btn-primary" onclick="plusDivs(1)">&#10095;</button>
+<!-- Modal -->
+<div class="modal fade" id="haberModal" tabindex="-1" aria-labelledby="haberModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="haberModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+            </div>
+            <div class="modal-body">
+                <p id="modalDate" class="text-muted small"></p>
+                <img id="modalImage" src="" class="img-fluid rounded mb-3" />
+                <p id="modalSummary"></p>
             </div>
         </div>
-    }
-    else
-    {
-        <p>Henüz yayınlanmış bir görsel yok.</p>
-    }
-
-    <!-- Modal -->
-    <div id="haberModal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%;
-        overflow:auto; background-color:rgba(0,0,0,0.8);">
-        <div style="background:#fff; margin:10% auto; padding:20px; width:80%; max-width:600px; border-radius:8px; position:relative;">
-            <span style="position:absolute; top:10px; right:20px; font-size:28px; cursor:pointer;" onclick="closeModal()">&times;</span>
-            <h3 id="modalTitle"></h3>
-            <p id="modalDate" style="font-style:italic;"></p>
-            <img id="modalImage" style="width:100%; height:auto; border-radius:5px; margin-bottom:15px;" />
-            <p id="modalSummary"></p>
-        </div>
     </div>
-
-    @section Scripts {
-        <script>
-            let slideIndex = 1;
-            showDivs(slideIndex);
-
-            function plusDivs(n) {
-                showDivs(slideIndex += n);
-            }
-
-            function showDivs(n) {
-                let i;
-                let x = document.getElementsByClassName("mySlides");
-                if (n > x.length) { slideIndex = 1 }
-                if (n < 1) { slideIndex = x.length }
-                for (i = 0; i < x.length; i++) {
-                    x[i].style.display = "none";
-                }
-                x[slideIndex - 1].style.display = "block";
-            }
-
-            var haberler = [
-                @foreach (var h in Model.Haberler)
-                {
-                        @: {
-                        @:   id: @h.Id,
-                        @:   title: "@h.Title",
-                        @:   summary: "@h.Summary",
-                        @:   imagePath: "@h.ImagePath",
-                        @:   publishedDate: "@h.PublishedDate.ToString("dd MMM yyyy")"
-                        @: },
-                }
-            ];
-
-            function showDetails(id) {
-                var haber = haberler.find(h => h.id === id);
-                if (haber) {
-                    document.getElementById("modalTitle").innerText = haber.title;
-                    document.getElementById("modalDate").innerText = haber.publishedDate;
-                    document.getElementById("modalImage").src = haber.imagePath;
-                    document.getElementById("modalSummary").innerText = haber.summary;
-                    document.getElementById("haberModal").style.display = "block";
-                }
-            }
-
-            function closeModal() {
-                document.getElementById("haberModal").style.display = "none";
-            }
-        </script>
-    }
 </div>
+<!-- card Listesi -->
+<div class="container mt-5">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var haber in Model.Haberler)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    <img src="@haber.ImagePath" class="card-img-top" alt="@haber.Title" style="height: 200px; object-fit: cover;" />
+                    <div class="card-body">
+                        <h5 class="card-title">@haber.Title</h5>
+                        <p class="card-text">@haber.Summary</p>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary" onclick="showDetails(@haber.Id)">Detay</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@section Scripts {
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Haberler dizisi
+        var haberler = [
+            @foreach (var h in Model.Haberler)
+            {
+                    @: {
+                    @:   id: @h.Id,
+                    @:   title: "@h.Title",
+                    @:   summary: "@h.Summary",
+                    @:   imagePath: "@h.ImagePath",
+                    @:   publishedDate: "@h.PublishedDate.ToString("dd MMM yyyy")"
+                    @: },
+            }
+        ];
+
+        function showDetails(id) {
+            var haber = haberler.find(h => h.id === id);
+            if (haber) {
+                document.getElementById("haberModalLabel").innerText = haber.title;
+                document.getElementById("modalDate").innerText = haber.publishedDate;
+                document.getElementById("modalImage").src = haber.imagePath;
+                document.getElementById("modalSummary").innerText = haber.summary;
+
+                var myModal = new bootstrap.Modal(document.getElementById('haberModal'));
+                myModal.show();
+            }
+        }
+    </script>
+}
