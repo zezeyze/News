@@ -18,8 +18,9 @@
         <input type="file" class="form-control" name="Resim" />
     </div>
     <div class="btn-group-toggle">
-        <button type="button" onclick="Save()" class="btn btn-primary">Kaydet</button>
+        <button type="button" onclick="Save()" class="shadow__btn">Kaydet</button>
     </div>
+  
 </form>
 
 @section Scripts {
@@ -54,5 +55,28 @@
             })
             .catch(() => alert("İstek sırasında hata oluştu."));
         }
+        
     </script>
 }
+
+<style>
+    .shadow__btn {
+        padding: 5px 12px;
+        border: none;
+        font-size: 14px;
+        color: #fff;
+        border-radius: 7px;
+        letter-spacing: 1px;
+        font-weight: 600;
+        text-transform: uppercase;
+        background: rgb(47, 170, 150);
+        box-shadow: 0 0 25px rgb(47, 170, 150);
+        transition: 0.5s;
+        transition-property: box-shadow;
+        display: inline-block;
+    }
+
+        .shadow__btn:hover {
+            box-shadow: 0 0 5px rgb(47, 170, 150), 0 0 25px rgb(47, 170, 150), 0 0 50px rgb(47, 170, 150), 0 0 100px rgb(47, 170, 150);
+        }
+</style>
