@@ -4,7 +4,33 @@
     ViewData["Title"] = "Haberler";
 }
 
-<h2>Haberler</h2>
+<h2>Yönetim Paneli</h2>
+<div class="row text-center">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <h5>Toplam Haber</h5>
+                <p>@Model.ToplamHaber</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h5>Yayında</h5>
+                <p>@Model.YayindaHaber</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <h5>Taslak</h5>
+                <p>@Model.TaslakHaber</p>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="d-flex justify-content-end mb-3">
     <button type="button" onclick="Direction()" class="btn btn-primary btn-sm">Yeni Haber Ekle</button>
@@ -37,7 +63,7 @@
                 </td>
                 <td>
                     <div class="d-flex gap-2">
-                        <a href="/Admin/Edit/@haber.Id" class="btn btn-dark btn-sm">Düzenle</a>
+                        <a href="/Admin/Edit/@haber.Id" class="btn btn-warning btn-sm">Düzenle</a>
 
                         @if (!haber.IsPublish)
                         {
@@ -45,6 +71,11 @@
                                 <button type="submit" class="btn btn-danger btn-sm">Yayınla</button>
                             </form>
                         }
+
+                        <form method="post" asp-page-handler="Delete" asp-route-id="@haber.Id" onsubmit="return confirm('Bu haberi silmek istediğinize emin misiniz?');" 
+                              style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Sil</button>
+                        </form>
                     </div>
                 </td>
             </tr>
